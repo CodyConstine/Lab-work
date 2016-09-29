@@ -8,6 +8,7 @@ double yi;
 double theta;
 bool start;
 short servo;
+short grid[4][4];
 
 
 void setup(){
@@ -21,6 +22,15 @@ void setup(){
     start = true;
     servo = 0;
     sparki.servo(0);
+    int i = 0;
+    int ii = 0;
+    for(i=0;i<5;i++)
+    {
+      for(ii=0;ii<5;ii++)
+      {
+        grid[i][ii]=1;
+      }
+    }
 }
 
 void loop(){
@@ -81,20 +91,35 @@ void loop(){
     xdot = 0; thetadot = -speedTurning;
   }
   
-  if(servo == 0){
+  int place = (time/100)%10;
+  int servoTheta = 0;
+  if(place < 2){
     sparki.servo(-45);
-    servo = 1;   
-  } else if ( servo == 1) {
-    sparki.servo(0);
-    servo = 2;
-  } else if ( servo == 2) {
-    sparki.servo(45);
-    servo = 0;
+    servoTheta = -M_PI/4;
   }
-  
+  else if(place < 5){
+    sparki.servo(0);
+    servoTheta = 0;
+  }
+  else if(place < 8){
+    sparki.servo(45);
+    servoTheta = M_PI/4;
+  }
+  else if(place < 10){
+    sparki.servo(0);
+    servoTheta = 0;
+  }
+  int ping = sparki.ping();
+  if(ping < 15){
+    int x = ping*cos(servoTheta);
+    int y = ping*sin(servoTheta);
+  }
   // Integration
 
-  
+  if(millis()>time+100)
+  {
+    sparki.moveStop();
+  }
   // eat up remaining time
   while (millis()<time+100);
   theta = theta + thetadot;
