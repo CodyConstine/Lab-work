@@ -9,6 +9,16 @@ double theta;
 bool start;
 short servo;
 short grid[4][4];
+short xPos;
+short yPos;
+struct position
+{
+  short x;
+  short y;
+};
+
+typedef struct position Position;
+Position index[16];
 
 
 void setup(){
@@ -31,7 +41,68 @@ void setup(){
         grid[i][ii]=1;
       }
     }
+    sparki.servo(-45);
+    xPos = 0;
+    yPos = 0;
 }
+
+int pointToIndex(int x, int y)
+{
+  x = x*10;
+  y = y*10;
+  return grid[x][y];
+}
+void indexAssign(){
+  int i,ii;
+  int counter = 0;
+   for(i=0;i<5;i++)
+    {
+      for(ii=0;ii<5;ii++)
+      {
+        index[counter].x = i;
+        index[counter].y = ii;
+        counter++; 
+      }
+    }
+}
+int getCords(int i)
+{
+  return index[i].x, index[i].y;
+}
+
+int getWeight(int s, int e)
+{
+  int xS, yS, xE, yE;
+  xS, yS = getCords(s);
+  xE, yE = getCords(e);
+  if(grid[xS][yS] == 0 || grid[xE][yE] == 0)
+  {
+    return 99;
+  }
+  else if(abs(xS-xE) == 1 && abs(yS-yE) == 1)
+  {
+    return 1;
+  }
+  else
+  {
+    int xDiff = xS-xE;
+    int yDiff = yS-yE;
+    int i,ii;
+    int score = abs(xDiff)+abs(yDiff);
+    for(i=1;i<=xDiff;i++)
+    {
+      for(ii=1;ii<=yDiff;ii++)
+      {
+        if(grid[i][ii]==0)
+        {
+          score += 3;
+        }
+      }
+    }
+    return score;
+  }
+}
+
 
 void loop(){
   double xdot = 0;
@@ -60,16 +131,16 @@ void loop(){
 
   if(lineCenter < threshold && lineLeft < threshold && lineRight < threshold && start)
   {
-    xi=0;
-    yi=0;
+    xi=30;
+    yi=5;
     theta=0.0;
     start = false;
     sparki.beep(); 
   }
   else if(lineCenter < threshold && lineLeft < threshold && lineRight < threshold && !start && (xi <= .1 && xi >= -.1)&&(yi <= .1 && yi >= -.1))
   {
-    xi=0;
-    yi=0;
+    xi=30;
+    yi=5;
     theta=0.0;
     start = false; 
     sparki.beep();
@@ -90,29 +161,15 @@ void loop(){
     sparki.moveRight(); // turn right
     xdot = 0; thetadot = -speedTurning;
   }
-  
-  int place = (time/100)%10;
-  int servoTheta = 0;
-  if(place < 2){
-    sparki.servo(-45);
-    servoTheta = -M_PI/4;
-  }
-  else if(place < 5){
-    sparki.servo(0);
-    servoTheta = 0;
-  }
-  else if(place < 8){
-    sparki.servo(45);
-    servoTheta = M_PI/4;
-  }
-  else if(place < 10){
-    sparki.servo(0);
-    servoTheta = 0;
-  }
   int ping = sparki.ping();
   if(ping < 15){
-    int x = ping*cos(servoTheta);
-    int y = ping*sin(servoTheta);
+    int x = ping*cos(M_PI/4);
+    int y = ping*sin(M_PI/4);
+    int xPos = xi+x*cos(theta);
+    int yPos = yi+y*sin(theta);
+    x = xPos*10;
+    y = yPos*10;
+    grid[x][y] = 0;
   }
   // Integration
 
