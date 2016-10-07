@@ -22,6 +22,8 @@ double xDot, thetaDot;
 
 double speedR, speedL;
 
+double stepR, stepL;
+
 
 void setup() {
   // put your setup code here, to run once:
@@ -35,16 +37,16 @@ void setup() {
   theta = 0.0;
   start = true;
 
-  xG = .2;
-  yG = -.2;
+  xG = .5;
+  yG = .5;
   thetaG = M_PI/4;
 
   p = sqrt(pow((xi-xG),2)+pow((yi-yG),2));//forward distance
   a = theta - atan((yi-yG)/(xi-xG));//rotation to goal
   n = thetaG - theta;//goal rotation
 
-  double p1 = .01;
-  double p2 = .01;
+  double p1 = 1;
+  double p2 = 1;
   double p3 = 0.001;
 
   xDot = p1*p;
@@ -52,8 +54,9 @@ void setup() {
 
   speedR = ((2*xDot/r)+(thetaDot*d/r))/2;
   speedL = ((2*xDot/r)-(thetaDot*d/r))/2;
-  percR = 100* (speedR/(speedTurning*2));//calculates percentage of max wheel speed
-  percL = 100* (speedL/(speedTurning*2));
+  percR = (speedR/(speedTurning));//calculates percentage of max wheel speed
+  percL = (speedL/(speedTurning));
+  
 }
 
 void loop() {
@@ -63,7 +66,9 @@ void loop() {
   time = millis();
 
   sparki.motorRotate(MOTOR_LEFT, DIR_CCW, percL);
-  sparki.motorRotate(MOTOR_RIGHT, DIR_CW, percR);  
+  sparki.motorRotate(MOTOR_RIGHT, DIR_CW, percR);
+  //sparki.stepLeft(stepL);
+  //sparki.stepRight(stepR);  
   sparki.clearLCD(); // wipe the screen
 
   sparki.print("sL: "); // show left line sensor on screen
@@ -80,11 +85,10 @@ void loop() {
   sparki.println(thetaDot);
 
 
-  
-  while (millis()<time+1000);
-  theta = theta - thetaDot*2;
-  xi = xi + cos(theta)*xDot;
-  yi = yi + sin(theta)*xDot;
+  while(time>millis()+100);
+  theta = theta - thetaDot*.1;
+  xi = xi + cos(theta)*xDot*.1;
+  yi = yi + sin(theta)*xDot*.1;
 
   sparki.print("xi: "); // show left line sensor on screen
   sparki.println(xi);
