@@ -1,0 +1,30 @@
+lab 3.3 Navigation Directions 
+
+
+Description
+
+The goals of this lab are
+
+    turning a discrete path into a robot trajectory
+
+Required
+
+    A sparki robot
+    A working implementation of Dijkstra's algorithm returning a list of waypoints
+    Working odometry and feedback control code to drive to any point on the plane
+
+Provided with an obstacle-free path consisting of discrete waypoints, you will need to generate a trajectory for the robot to follow. We will do this by first calculating X-Y coordinates in world coordinates for each waypoint and then use feedback control to drive the robot there.
+
+Instructions
+
+    Write code that calculates an X-Y coordinate in the real world based on the I-J coordinates of your 2D map. This coordinate should be the center of each grid cell.
+    Implement a state machine that pulls an entry from the route, calculate its X-Y coordinate and then use feedback control to drive there. Pull the next coordinate of the stack once the robot is close enough to the last waypoint. 
+
+Deliverables
+
+Provide a write-up describing your approach including a picture of the state machine you implemented. Answer the following questions: (1) How did you chose the distance at which you pull the next waypoint? What happens if you do this too early or too late? (2) What do you need to do should an unforeseen obstacle appear? Try to use tools/algorithms from previous exercises to solve this problem. 
+
+
+
+
+
