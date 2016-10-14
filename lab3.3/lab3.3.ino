@@ -133,8 +133,7 @@ void inverseKin(int i){
     theta = 0.0;
     start = true;
 
-    xG = .2;
-    yG = -.2;
+    xG, yG = getCords(i);
     thetaG = M_PI/4;
 
     p = sqrt(pow((xi-xG),2)+pow((yi-yG),2));//forward distance
@@ -150,8 +149,8 @@ void inverseKin(int i){
 
     speedR = ((2*xDot/r)+(thetaDot*d/r))/2;
     speedL = ((2*xDot/r)-(thetaDot*d/r))/2;
-    percR = 100* (speedR/(speedTurning*2));//calculates percentage of max wheel speed
-    percL = 100* (speedL/(speedTurning*2));
+    percR = (speedR/(speedTurning));//calculates percentage of max wheel speed
+    percL = (speedL/(speedTurning));
 }
 
 
