@@ -20,6 +20,8 @@ short path[16];
 int code;
 double d;
 double r;
+int p1;
+int * pathOrder;
 
 int percR, percL;
 
@@ -35,11 +37,11 @@ double speedR, speedL;
 typedef struct position Position;
 Position index[16];
 
-int pointToIndex(int x, int y)
+int pointToIndex(double x, double y)
 {
-  x = x*10;
-  y = y*10;
-  return grid[x][y];
+  int x2 = x*10;
+  int y2 = y*10;
+  return grid[x2][y2];
 }
 void indexAssign(){
   int i,ii;
@@ -68,19 +70,16 @@ int getWeight(int s, int e)
   {
     return 99;
   }
-  else if(abs(xS-xE) == 1 && abs(yS-yE) == 1)
-  {
-    return 1;
-  }
   else
   {
-    return 99;
+    return 1;
   }
 }
 
 
-void dij(int n,int v,int cost[10][10],int dist[])
+void dij(int n,int v)
 {
+ int dist[16];
  int i,u,count,w,flag[10],min;
  for(i=1;i<=n;i++)
  {
@@ -153,7 +152,6 @@ void inverseKin(int i){
     percL = (speedL/(speedTurning));
 }
 
-
 void setup(){
   //Serial.begin(9600);
     sparki.clearLCD();
@@ -174,12 +172,17 @@ void setup(){
         grid[i][ii]=1;
       }
     }
+    grid[1][2] = 0;
+    grid[2][3] = 0;
+    grid[0][1] = 0;
     sparki.servo(-45);
     xPos = 0;
     yPos = 0;
     code = 0;
+    dij(0,15);
+    pathOrder = pathReturn(0,15);
+    p1 = 0;
 }
-
 
 
 
@@ -189,11 +192,32 @@ void loop(){
   time = millis();
   switch(code) {
       case 0: {
-
+        inverseKin(pathOrder[p1]);
+        code = 1;
+      }
+      break;
+      case 1: {
+        sparki.motorRotate(MOTOR_LEFT, DIR_CCW, percL);
+        sparki.motorRotate(MOTOR_RIGHT, DIR_CW, percR);
+        code = 2;
+      }
+      break;
+      case 2: {
+        int x, y = getCords(p1);
+        double x2 = x/10;
+        double y2 = y/10;
+        if(abs(xi-x2)>.5 && abs(yi-y2)){
+          p1++;
+          code = 0;
+        }
       }
       break;
       default: {
           sparki.moveStop();
       }
   }
+  while(time>millis()+100);
+  theta = theta - thetaDot*.1;
+  xi = xi + cos(theta)*xDot*.1;
+  yi = yi + sin(theta)*xDot*.1;
 }
