@@ -131,7 +131,7 @@ void inverseKin(int i){
     thetaG = M_PI/4;
 
     p = sqrt(pow((xi-xG),2)+pow((yi-yG),2));//forward distance
-    a = theta - atan((yi-yG)/(xi-xG));//rotation to goal
+    a = theta - atan2((yi-yG),(xi-xG));//rotation to goal
     n = thetaG - theta;//goal rotation
 
     double p1 = .01;
@@ -213,7 +213,7 @@ void loop(){
       }
   }
   while(time>millis()+100);
-  theta = theta - thetaDot*.1;
+  theta = theta - thetaDot;
   xi = xi + cos(theta)*xDot*.1;
   yi = yi + sin(theta)*xDot*.1;
   sparki.clearLCD();
