@@ -127,11 +127,6 @@ void inverseKin(int i){
     sparki.clearLCD();
     speedForward = (.3/10.77);
     speedTurning = (5*M_PI/24);
-    xi = 0;
-    yi = 0;
-    theta = 0.0;
-    start = true;
-
     xG, yG = getCords(i);
     thetaG = M_PI/4;
 
@@ -175,13 +170,14 @@ void setup(){
     grid[1][2] = 0;
     grid[2][3] = 0;
     grid[0][1] = 0;
-    sparki.servo(-45);
     xPos = 0;
     yPos = 0;
     code = 0;
     dij(0,15);
     pathOrder = pathReturn(0,15);
     p1 = 0;
+    sparki.servo(-45);
+    code = 0;
 }
 
 
@@ -206,7 +202,7 @@ void loop(){
         int x, y = getCords(p1);
         double x2 = x/10;
         double y2 = y/10;
-        if(abs(xi-x2)>.5 && abs(yi-y2)){
+        if(abs(xi-x2)>.5 && abs(yi-y2)>.5){
           p1++;
           code = 0;
         }
@@ -220,4 +216,14 @@ void loop(){
   theta = theta - thetaDot*.1;
   xi = xi + cos(theta)*xDot*.1;
   yi = yi + sin(theta)*xDot*.1;
+  sparki.clearLCD();
+  sparki.print("xi: "); // show left line sensor on screen
+  sparki.println(xi);
+
+  sparki.print("yi: "); // show center line sensor on screen
+  sparki.println(yi);
+
+  sparki.print("theta: "); // show center line sensor on screen
+  sparki.println(theta);
+  sparki.updateLCD();
 }
