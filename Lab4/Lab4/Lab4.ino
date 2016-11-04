@@ -1,47 +1,31 @@
 #define NO_LCD 
 #include  <Sparki.h>; // include the sparki library 
-static int angle=-30;
+static int angle=-15;
 static int counter = 0;
-static int arr[60];
+static int code = 0;
 void setup() { 
   sparki.clearLCD();
 } 
 
 void loop() { 
-  sparki.servo(angle); 
-  angle=angle+1; 
-  if(angle>30){ 
-    angle=-30; sparki.println(); 
-  } 
-  int cm = sparki.ping(); // measures the distance with Sparki's eyes 
-  sparki.print(cm); 
-  sparki.print(" ");
-  sparki.updateLCD();
-  arr[counter] = cm;
-  if(counter == 59){
-    int sum = 0;
-    int i = 0;
-    int minD = 2000;
-    for(i = 0; i< 60; i++){
-      if(arr[counter]<minD){
-        minD = arr[counter];
+  switch(code){
+    case 0: {
+      sparki.servo(angle); 
+      angle=angle+1; 
+      if(angle>30){ 
+        angle=-30; sparki.println(); 
+      } 
+      int cm = sparki.ping(); // measures the distance with Sparki's eyes 
+      sparki.print(cm); 
+      sparki.print(" ");
+      sparki.updateLCD();
+      if(counter == 29){
+        code = 1;
       }
+      counter ++;
     }
-    for(i = 0; i< 60; i++){
-      if(arr[counter]<minD+3){
-        sum = (sum + arr[i])/2;
-      }
+    case 1: {
+      sparki.moveStop();
     }
-    sparki.clearLCD();
-    sparki.println();
-    sparki.println();
-    sparki.print(sum); 
-    sparki.print(" ");
-    sparki.println();
-    sparki.println();
-    sparki.updateLCD();
-    delay(2000);
-    counter = 0;
   }
-  counter++;
 } 
