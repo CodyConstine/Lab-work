@@ -79,12 +79,16 @@ void loop() {
       //grab beer
       //sparki.beep();
       sparki.RGB(RGB_RED);
-      sparki.moveStop();
-      //code = 2;
+      sparki.moveBackward(5);
+      sparki.moveRight(15);
+      sparki.moveForward(10);
+      sparki.moveRight(90);
+      code = 2;
     }
     break;
     case 2: {
       //close fridge
+      sparki.moveStop();
       code = 3;
     }
     break;
@@ -115,7 +119,7 @@ void loop() {
       //wait till command to move
       sparki.moveForward();
       int dist = sparki.ping();
-      if(dist< 6 && dist > 0){
+      if(dist< 10 && dist > 0){
         if(beerCount > 0){
           sparki.moveStop();
           code = 0;
