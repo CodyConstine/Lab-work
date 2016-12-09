@@ -1,0 +1,20 @@
+What are you doing? How is it done now? 	
+	- We are using Sparki as a grab and retrieval robot to procure a beer from a mock refrigerator, and bring it back to a designated spot where the user is sitting. 
+
+What are the limits of current practice? 
+	- Limitations would include bringing the beverage to a spot that is different than the one at the end of the designated, pre-programmed path. Sparki is using detection to detect the door, and the beer itself, but cannot "intuitively" bring the beer can to a unique spot where the user is located. Currently he is only able to bring it back to a pre-programmed, designated location.
+
+
+How is a robot doing the job better?
+	- There are robots that we have seen on youtube (such as the PR 2) that can actually retrieve a beer from an elevated, normal-sized refrigerator. Also, we noticed that this other robot was capable of detecting where a human is located after retrieval, of approaching the human and stopping, and then reaching out to offer the beverage. Also, the robot was capable of using his arm to open the top of a beer bottle with a modified 'can-opener' gripper. Obviously we were not capable of making our sparki complete these parts of the task. 
+
+
+How does your approach work? How does your setup map to a real world task?
+	- We are using path planning primarely using a specific origin point (so that sparki knows where he needs to go) in order to move sparki from his original park station, to face himself in front of the refrigerator, to pull the door open, and then to enter the fridge - in order to then use his grippers to lock hold on the beer can, back up with the can, use the can in order to close the door of the fridge, and then finally to bring the beer back to the user.
+	- We are using several switch cases to determine which point of the code Sparki is currently executing.
+	- We are using object detection to detect the side of the fridge, the door, as well as the beverage itself. (Must be wrapped in white paper for Sparki to detect any of these things.)
+	- Examples would moving backwards with the beer, approaching the door and opening it, and leaving the fridge and closing it first, before returning to the user with the beverage. 
+
+
+How do you assess your approach?
+ 	- Based on the limitations of hardware, we had to decide what tasks we would like Sparki to complete, versus what the robot itself is capable of. We disposed of several ideas (such as using markers, or line detection on the ground) which we eventually put aside and decided to use a combination of path planning with origin points, as well as object detection when executing our tasks for the final project. 
