@@ -6,9 +6,10 @@ int beerCount;
 void setup() {
   // put your setup code here, to run once:
   sparki.clearLCD();
-  code = 6;
+  code = 7;
   beerCount = 1;
   sparki.servo(45);
+  sparki.gripperOpen();
 }
 
 // /------^-----
@@ -59,14 +60,16 @@ void loop() {
   sparki.println(beerCount);
   sparki.print("Code = ");
   sparki.println(code);
-  sparki.updateLCD();
   switch(code){
     case 0: {
       //open fridge
+      sparki.gripperStop();
       sparki.RGB(RGB_GREEN);
-      sparki.servo(-10);
+      sparki.servo(-20);
       if(sparki.ping() < 4 && sparki.ping()> 0){
         sparki.moveLeft(25);
+        sparki.RGB(RGB_YELLOW);
+        sparki.gripperStop();
         code = 1;
       }
       else {
@@ -80,42 +83,79 @@ void loop() {
       //sparki.beep();
       sparki.RGB(RGB_RED);
       sparki.moveBackward(5);
-      sparki.moveRight(15);
-      sparki.moveForward(10);
-      sparki.moveRight(90);
+      //sparki.moveRight(10);
+      sparki.moveForward(18);
+      //sparki.moveBackward(3);
+      sparki.moveRight(115);
       code = 2;
     }
     break;
     case 2: {
+      
+      sparki.servo(0);
+      //delay(2000);
+      sparki.gripperStop();
       //close fridge
-      sparki.moveStop();
-      code = 3;
+      sparki.moveForward();
+      if(sparki.ping() < 6 && sparki.ping() > 0){
+        sparki.moveForward(5);
+        sparki.gripperClose();
+        delay(3000);
+        sparki.moveBackward();
+        /*sparki.moveLeft(200);
+        sparki.moveBackward(2);
+        sparki.moveLeft(40);*/
+        sparki.servo(-90);
+        code = 3;
+      }
+      //code = 3;
     }
     break;
-    case 3: {
-      sparki.moveForward(40);
-      sparki.moveRight(90);
-      sparki.moveForward(40);
-      code = 4;
+    case 3 : {
+      sparki.print("Distance = ");
+      sparki.println(sparki.ping());
+      sparki.gripperStop();
+      if(sparki.ping() > 22 || sparki.ping() < 0){
+        sparki.moveBackward(8);
+        code = 4;
+      }
+      //sparki.moveStop();
     }
     break;
     case 4: {
-      //drop beer
-      sparki.gripperOpen();
-      sparki.moveBackward(5);
-      sparki.moveLeft(180);
-      beerCount = beerCount - 1;
+      sparki.RGB(RGB_YELLOW);
+      sparki.moveLeft(130);
+      sparki.moveForward(7);
+      sparki.moveRight(130);
+      sparki.moveForward(25);
+      sparki.moveLeft(40);
       code = 5;
     }
     break;
     case 5: {
-      sparki.moveForward(35);
-      sparki.moveLeft(90);
-      sparki.moveForward(40);
+      //drop beer
+      
+      sparki.moveBackward(5);
+      sparki.moveRight(120);
+      sparki.moveForward(50);
+      /*sparki.gripperOpen();
+      sparki.moveBackward(5);
+      sparki.gripperStop();
+      sparki.moveLeft(180);
+      beerCount = beerCount - 1;*/
       code = 6;
     }
     break;
     case 6: {
+      sparki.gripperOpen();
+      delay(1000);
+      sparki.gripperStop();
+      code = 7;
+    }
+    break;
+    case 7: {
+      //sparki.gripperOpen();
+      //delay(8000);
       //wait till command to move
       sparki.moveForward();
       int dist = sparki.ping();
@@ -125,13 +165,13 @@ void loop() {
           code = 0;
         }
         else {
-          code = 7;
+          code = 8;
         }
       }
 
     }
     break;
-    case 7: {
+    case 8: {
       sparki.moveStop();
       if(beerCount > 0){
           code = 6;
@@ -139,4 +179,6 @@ void loop() {
     }
     break;
   }
+  
+  sparki.updateLCD();
 }
